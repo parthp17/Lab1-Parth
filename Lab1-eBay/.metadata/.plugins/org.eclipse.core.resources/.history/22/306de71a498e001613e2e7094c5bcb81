@@ -1,0 +1,14 @@
+'use strict';
+var winston = require('winston');
+var fs = require('fs');
+
+var env = process.env.NODE_ENV || 'development';
+
+
+var logger = new (winston.Logger)({
+    transports: [
+      new (winston.transports.File)( { filename: '././logs/mylogfile.log', level: 'info'})
+    ]
+  });
+
+exports.logger = logger;

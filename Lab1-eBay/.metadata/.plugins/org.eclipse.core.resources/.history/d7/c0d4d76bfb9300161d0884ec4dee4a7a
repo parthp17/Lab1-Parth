@@ -1,0 +1,11 @@
+var request = require('request'), express = require('express'), assert = require("assert") ,http = require("http");
+
+describe('http tests', function(){
+	it('should return logIn page for correct url', function(done){
+		http.get('http://localhost:3000/logIn', function(res) {
+			assert.equal(200, res.statusCode);
+			done();
+		})
+	});
+
+});

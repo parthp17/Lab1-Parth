@@ -1,0 +1,54 @@
+var mysql = require('mysql');//importing module
+var sem = require('semaphore')(10);
+var List = [];
+var maxPoolSize = 10;
+var connectionpool;
+
+function getConnection(){
+    var connection = mysql.createConnection({
+        host : 'localhost',
+        user : 'root',
+        password : 'root',
+        database : 'test',
+        port : 3306
+    });
+    return connection;
+}
+
+
+
+function createPool(){
+    console.log("Connection Pool is creaated");
+    connectionpool = new List();
+    for(var i=0;i<maxPoolSize;i++){
+        connectionpool.push(getConnection());
+    }
+}
+
+function getConnectionFromPool(){
+	sem.take(function(){
+		var connection = connectionpool.pop();
+		connection.query(sqlQuery,function(err, rows, fields)
+				{
+				if(err)
+					{
+					console.log("Error :: " + err.message);
+					}
+				else
+					{
+						console.log("DB results : " + rows);
+						callback(err, rows);
+					}
+				});
+				console.log("\n Connection closed");
+				connectionpool.push(connection);
+			    sem.leave();
+	});
+}
+
+
+
+
+exports.createPool=createPool;
+exports.getConnectionFromPool=getConnectionFromPool;
+exports.releaseConnection=releaseConnection;

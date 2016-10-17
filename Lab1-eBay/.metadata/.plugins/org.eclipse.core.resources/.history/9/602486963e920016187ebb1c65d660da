@@ -1,0 +1,8 @@
+
+
+function getDateTme()
+{
+	var date = new Date();
+}
+
+exports.getDateTime = getDateTime; 

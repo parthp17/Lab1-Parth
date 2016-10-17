@@ -1,0 +1,18 @@
+"use strict"
+var ejs = require("ejs");
+var mysql = require('./mysql');
+var logging = require('./logging');
+
+function getHomeValues(req, res) {
+	if (req.session.username) {
+		var getItems = "select * from items";
+		res.send({
+			"statusCode" : 200,
+			"fname" : req.session.fname,
+			"items"
+		});
+		res.end();
+	}
+}
+
+exports.getHomeValues = getHomeValues;

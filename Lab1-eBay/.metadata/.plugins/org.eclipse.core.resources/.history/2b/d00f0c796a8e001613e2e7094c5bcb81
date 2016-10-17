@@ -1,0 +1,35 @@
+"use strict"
+var ejs = require("ejs");
+var mysql = require('./mysql');
+var logging = require('./logging');
+
+function getItem(req,res)
+{
+	if(req.session.username)
+	{
+		var itemId = req.params("itemId");
+		logging.logger.log('info', req.session.username + "  | viewed item: " +itemId+ " | "  + new Date().toString());
+		var selectItem = "select * from item where itemId = " + itemId;
+		mysql.getData(function(err, results)
+				{
+						if (err)
+						{
+							throw err;
+						}
+					},selectItem );
+		ejs.renderFile('./views/item.ejs', function(err, result)
+				{
+					if (!err)
+					{
+						res.end(result);
+					}
+					else
+					{
+						res.end("An error occured.");
+						console.log(err);
+					}
+				});
+	}
+}
+
+exports.getItem = getItem;

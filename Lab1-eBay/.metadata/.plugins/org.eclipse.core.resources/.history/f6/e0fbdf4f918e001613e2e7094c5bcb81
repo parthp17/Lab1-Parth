@@ -1,0 +1,19 @@
+"use strict"
+var item = angular.module('item', []);
+
+item.controller('item', function($scope, $http, $window) {
+
+	$scope.addToCart = function(itemId)
+	{
+		$http({
+			method : "GET",
+		    url : '/sell',
+		}).success(function(data){
+			$window.location.href = "/addToCart;
+		}).error(function(data){
+			
+		});
+		$window.location.href = "/addToCart?itemId="+itemId; 
+	};
+	
+});

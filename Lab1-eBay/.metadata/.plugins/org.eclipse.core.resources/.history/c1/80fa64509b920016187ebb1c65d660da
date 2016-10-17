@@ -1,0 +1,74 @@
+"use strict"
+var profile = angular.module('profile', []);
+
+profile.controller('profile', function($scope, $http, $window)
+		{
+			$scope.contact = "";
+			$scope.zipcode = "";
+			$scope.city = "";
+			$scope.adrLine2 = "";
+			$scope.adrLine1="";
+			$scope.state = "";
+			$scope.bdate = "";
+			
+			$scope.init = function()
+			{
+				$http({
+					method : "GET",
+				    url : '/getProfile'
+				}).success(function(data){
+					if(data.statusCode = 200)
+					{
+						var date = data.result.birthday;
+						
+						$scope.bdate = 
+						$scope.contact = data.result[0].contact;
+						$scope.zipcode = data.result[0].zipcode;
+						$scope.city = data.result[0].city;
+						$scope.adrLine2 = data.result[0].line2;
+						$scope.adrLine1= data.result[0].line1;
+						$scope.state = "CA";
+						
+					}
+					else
+					{
+						console.log(data);
+						//$window.location.href = '/';
+					}
+				}).error(function(err){
+					
+				});
+			};
+			
+			$scope.update = function()
+			{
+			
+				$http({
+					method : "POST",
+				    url : '/updateProfile',
+				    data :
+				    {
+				    	
+				    	"birthday": $scope.bdate,
+				        "adrLine1" : $scope.adrLine1,
+				        "adrLine2" : $scope.adrLine2,
+				        "city":  $scope.city,
+				        "zipcode": $scope.zipcode,
+				        "state": "CA",
+				        "contact": $scope.contact,
+				        "country":"United States",
+				    }
+				}).success(function(data){
+					if (data.statusCode == 200) {
+						$scope.invalidLogin = true;
+						$window.location.href = '/home';
+					}
+					else
+					{
+						$scope.invalidLogin = false;
+					}
+				}).error(function(data){
+					
+				});
+			};
+		});

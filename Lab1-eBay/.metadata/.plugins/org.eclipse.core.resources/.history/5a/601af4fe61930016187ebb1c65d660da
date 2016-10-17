@@ -1,0 +1,32 @@
+"use strict"
+var ejs = require("ejs");
+var mysql = require('./mysql');
+var logging = require('./logging');
+
+function getTransactions(req,res)
+{
+	if(req.session.username)
+	{
+		var getBoughtItems = "select * from transaction,orders where buyer = '"+req.session.username+"' and transaction.transactionId= orders.transactionId";
+		var getSoldItems = "select * from orders where seller = '"+req.session.username+"'";
+		var boughtItems,soldItems;
+		mysql.getData(function(error, response) {
+			if(error)
+			{
+				throw error;
+			}
+			else
+			{
+				logging.logger.log('info', req.session.username + "  | getting bought items | "  + new Date().toString());
+				boughtItems = response;
+			}
+		},getBoughtItems);
+		
+	}
+	else
+	{
+		res.redirect('/');
+	}
+}
+
+exports.getTransactions = getTransactions;

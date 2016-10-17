@@ -1,0 +1,81 @@
+"use strict"
+var home = angular.module('home', []);
+
+home.controller('home', function($scope, $http, $window)
+		{
+			$scope.displayName = "";
+			$scope.lastLoggedTime = "";
+			$scope.items = [];
+			$scope.init = function()
+			{
+				
+				$http({
+					method : "GET",
+				    url : '/getHomeValues'
+				}).success(function(data){
+					if(data.statusCode = 200)
+					{
+						$scope.displayName = data.fname;
+						$scope.lastLoggedTime = data.time;
+						var i =0;
+						for(i;i<data.items.length;i++)
+						{
+							console.log(data.items[i].itemName);
+							$scope.items.push(data.items[i]);
+						}
+						//$scope.items = data.items; 
+					}
+					else
+					{	
+						//$window.location.href = '/';
+					}
+				}).error(function(err){
+					
+				});
+			};
+			
+			//$scope.init();
+			
+			$scope.signOut = function()
+			{
+				$http({
+					method : "GET",
+				    url : '/signOut',
+				}).success(function(data){
+					if (data.statusCode == 200) {
+						console.log("Hi");
+						$window.location.href = '/';
+					}
+					else
+					{
+						$window.location.href = '/';
+					}
+				}).error(function(data){
+					
+				});
+			};
+			
+			$scope.profile = function()
+			{				
+						$window.location.href = '/profile';
+			};
+			
+			$scope.sell = function()
+			{
+				$http({
+					method : "GET",
+				    url : '/sell',
+				}).success(function(data){
+						$window.location.href = '/sell';
+				}).error(function(data){
+					
+				});
+			};
+			
+			$scope.getItem = function(id)
+			{
+				alet(id);
+				$window.location.href = '/item?itemId='+id;
+			};
+			
+		});

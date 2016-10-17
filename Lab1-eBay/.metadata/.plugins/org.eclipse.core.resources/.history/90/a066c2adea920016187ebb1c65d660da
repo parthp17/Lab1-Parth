@@ -1,0 +1,40 @@
+"use strict"
+var handler = angular.module('handler', []);
+
+handler.controller('handler', function($scope, $http, $window) {
+	$scope.bdate = "";
+	$scope.content = [];
+	$scope.tags = ["First Name","Last Name", "E Mail",""];
+	$scope.init = function()
+	{
+		$http({
+			method : "GET",
+		    url : '/getProfile'
+		}).success(function(data){
+			
+			if(data.statusCode = 200)
+			{
+				$scope.content = data.result[0];
+			
+				var date = new Date(data.result[0].birthday);
+				var month = date.getMonth() + 1;
+				var day = date.getDate();
+				date = date.getFullYear() + "-" + month + "-" + day;
+				$scope.bdate = date;
+				$scope.contact = data.result[0].contact;
+				$scope.zipcode = data.result[0].zipcode;
+				$scope.city = data.result[0].city;
+				$scope.adrLine2 = data.result[0].line2;
+				$scope.adrLine1= data.result[0].line1;
+				$scope.state = data.result[0].state;
+				$scope.country = "United States";
+			}
+			else
+			{
+				console.log(data);
+				//$window.location.href = '/';
+			}
+		}).error(function(err){
+		});
+	};
+});

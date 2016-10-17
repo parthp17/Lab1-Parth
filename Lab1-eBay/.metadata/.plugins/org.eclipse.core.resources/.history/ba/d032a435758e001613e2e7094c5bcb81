@@ -1,0 +1,11 @@
+"use strict"
+var item = angular.module('item', []);
+
+item.controller('item', function($scope, $http, $window) {
+
+	$scope.addToCart = function(itemId)
+	{
+		//console.log(itemId); 
+	}
+	
+});

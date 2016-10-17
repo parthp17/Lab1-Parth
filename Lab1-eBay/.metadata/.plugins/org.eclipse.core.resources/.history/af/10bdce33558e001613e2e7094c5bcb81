@@ -1,0 +1,13 @@
+"use strict"
+var ejs = require("ejs");
+var mysql = require('./mysql');
+var logging = require('./logging');
+
+function getHomeValues(req,res)
+{
+
+res.send({"statusCode":200,"fname":req.session.fname});
+res.end();
+}
+
+exports.getHomeValues = getHomeValues ;

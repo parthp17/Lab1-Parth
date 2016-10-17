@@ -1,0 +1,63 @@
+"use strict"
+var ejs = require("ejs");
+var mysql = require('./mysql');
+var logging = require('./logging');
+
+function getBoughtTransactions(req,res)
+{
+	if(req.session.username)
+	{
+		var getBoughtItems = "select * from transaction,orders where buyer = '"+req.session.username+"' and transaction.transactionId= orders.transactionId";
+		
+		mysql.getData(function(error, response) {
+			if(error)
+			{
+				throw error;
+			}
+			else
+			{
+				logging.logger.log('info', req.session.username + "  | getting bought items | "  + new Date().toString());
+				for (i; i < response.length; i++) {
+					var json = {
+						"transactionId" : response[i].transactionId,
+						"transactionDate" : response[i].transactionDate,
+						"total" : response[i].total,
+						"description" : response[i].description,
+						"seller" : response[i].owner,
+						"orderedquantity" : response[i].orderedquantity,
+						"availquantity" : response[i].quantity,
+						"state" : response[i].state
+					};
+					cartContent.push(json);
+					console.log(json);
+					total += (Number(response[i].price))*(Number(response[i].orderedquantity));
+				}
+				res.send(response);
+			}
+		},getBoughtItems);
+		
+		
+	}
+	else
+	{
+		res.redirect('/');
+	}
+}
+function getSoldTransactions(req, res) {
+	if (req.session.username) {
+		var getSoldItems = "select * from orders where seller = '"+req.session.username+"'";
+		mysql.getData(function(error, response) {
+			if (error) {
+				throw error;
+			} else {
+				logging.logger.log('info', req.session.username	+ "  | getting bought items | "	+ new Date().toString());
+				res.send(response);
+			}
+		}, getBoughtItems);
+	} else {
+		res.redirect('/');
+	}
+}
+
+exports.getSoldTransactions = getSoldTransactions;
+exports.getBoughtTransactions = getBoughtTransactions;

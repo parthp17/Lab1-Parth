@@ -1,0 +1,20 @@
+'use strict';
+var winston = require('winston');
+var fs = require('fs');
+console.log("hi");
+var env = process.env.NODE_ENV || 'development';
+
+var logDir = 'log';
+// Create the log directory if it does not exist
+if (!fs.existsSync(logDir)) {
+  fs.mkdirSync(logDir);
+}
+//winston.add(winston.transports.Riak, { level: 'warn' });
+var logger = new (winston.Logger)({
+    transports: [
+      new (winston.transports.File)( { filename: 'mylogfile.log', level: 'info' ,timestamp: true})
+    ]
+  });
+winston.add(winston.transports.File, { filename: 'mylogfile.log', level: 'info' ,timestamp: true});
+
+winston.log('info', '127.0.0.1 - Theres no place like home', new Date().toLocaleTimeString());

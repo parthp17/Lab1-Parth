@@ -1,0 +1,28 @@
+"use strict"
+var cart = angular.module('cart', []);
+
+cart.controller('cart', function($scope, $http, $window) {
+	
+	$scope.cart = [];
+	
+	$scope.init = function()
+	{
+		var i=0;
+		
+		$http({
+			method : "GET",
+		    url : '/getMyCart',
+		}).success(function(data){
+				for(i; i < data.length;i++)
+				{
+					console.log(data[i]);
+					$scope.cart.push(JSON.stringify(data[i]));
+					console.log(cart);
+				}
+				//alert(cart);
+		}).error(function(data){
+			
+		});
+	}
+	
+});

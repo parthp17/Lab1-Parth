@@ -1,0 +1,39 @@
+"use strict"
+var ejs = require("ejs");
+var mysql = require('./mysql');
+var logging = require('./logging');
+
+function getHomeValues(req, res) {
+	if (req.session.username) {
+		var getItems = "select * from items";
+		mysql.getData(function(err, results)
+				{
+						if (err)
+						{
+							throw err;
+						}
+						else
+						{
+							if (results.length > 0)
+							{
+								console.log(results);
+								res.send({
+									"statusCode" : 200,
+									"fname" : results.firstName,
+									"items":results,
+									"lastloggedIn": res.session.lastloggedIn
+								});
+								res.end();
+							}
+							else
+							{
+								res.send({'statusCode':401});
+								res.end();
+								console.log("401");
+							}
+						}
+					},getItems );
+	}
+}
+
+exports.getHomeValues = getHomeValues;
